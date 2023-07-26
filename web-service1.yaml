@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    component: web-service
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      component: web-service
+  template:
+    metadata:
+      name: nginx
+      labels:
+        component: web-service
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable
+        ports:  
+        - containerPort: 80
+          name: http-web-svc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    component: web-service
+  ports:
+    - name: nginx-port
+      protocol: TCP
+      port: 80
+      targetPort: http-web-svc
